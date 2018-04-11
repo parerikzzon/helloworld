@@ -1,6 +1,6 @@
 <?php
 function add(){
-//att to textfile
+$texfile=new SplifileObject("text.txt");
 }
 
 
