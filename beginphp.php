@@ -1,7 +1,7 @@
 <?php
 $texfile=new SplFileObject("text.txt");
-function add(){
-
+function add($datatowrite){
+  $textfile->fwrite($datatowrite)
 }
 function delete(){
   
