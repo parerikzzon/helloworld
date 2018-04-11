@@ -1,6 +1,10 @@
 <?php
+$texfile=new SplFileObject("text.txt");
 function add(){
-$texfile=new SplifileObject("text.txt");
+
+}
+function delete(){
+  
 }
 
 
