@@ -13,7 +13,7 @@ and open the template in the editor.
     <body>
         
         <table id="mytable"border="1" width="15%"></table>
-        <button id="btn" onclick="LottoApp.ViewLotto(TableView)">Ny lottorad</button>
+        <button id="btn" onclick="LottoApp.viewLotto(TableView)">Ny lottorad</button>
         <!--<button id="btn" onclick="LottoApp.ViewLotto(ULView)">Ny lottorad</button>-->
         
         <script type="text/javascript"> 
@@ -22,26 +22,26 @@ and open the template in the editor.
             //LottoApp = {};
             LottoApp.MAX=35;
             LottoApp.MIN=1;
-            LottoApp.lottorow=function(){
+            LottoApp.lottoRow=function(){
                      //The Set object lets you store unique values of any type, whether primitive values or object references.
                     //läs mer på https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set
                     var lottorad = new Set();
 
                     while (lottorad.size < 7) {
                         //The add() method appends a new element with a specified value to the end of a Set object.
-                        lottorad.add(LottoApp.randomnumber());                                   
+                        lottorad.add(LottoApp.randomNumber());                                   
                     }
                     return lottorad;                    
             };//end lottorad
-            LottoApp.randomnumber=function(){
+            LottoApp.randomNumber=function(){
                 //Math.floor(Math.random() * (max - min + 1)) + min; från mozilla
                 //text 1-35
                 
                 return Math.floor(Math.random() * (LottoApp.MAX- LottoApp.MIN + 1)) + 1;
             };
            
-           LottoApp.ViewLotto=function(view){
-               view.createLottoView(LottoApp.lottorow());
+           LottoApp.viewLotto=function(view){
+               view.createLottoView(LottoApp.lottoRow());
            };
            
            var TableView={};
