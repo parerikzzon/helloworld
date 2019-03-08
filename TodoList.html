@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>Bootstrap Example</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.10/vue.js"></script>
+	
+</head>
+
+<body>
+
+	<div class="container">
+
+		<h1>Todolist Javascript</h1>
+		<div>
+			<input type="text" id=txtTodo>
+			<button id="btnAdd" class="btn btn-primary">Add todo</button>
+			<ul id="todolist">
+			</ul>
+			<div id="jsarray"></div>			
+		</div>
+		<!--vue-->
+		<h1>Todolist Vue</h1>
+		<div id="myvueinstance">
+			<input type="text" v-model="newTodo">
+			<!--<button v-on="click: addTodoVue">Add todo</button>-->
+			<button v-on:click="addTodoVue" class="btn btn-primary">Add todo</button>
+			<ul>
+				<li v-for="todo in todovue" v-on:click="removeTodoVue(todo)">{{ todo }} <span class="glyphicon glyphicon-trash"></span></li>
+			</ul>
+			<div>{{todovue}}</div>
+		</div>
+		<!--vue-->
+		<h1>Todolist JQuery</h1>
+		<div>
+			<input type="text" id="txtTodoJQuery">			
+			<button id="btnAddJQuery" class="btn btn-primary">Add todo</button>
+			<ul id="todolistJQuery">				
+			</ul>
+			<div id="jqarray"></div>
+		</div>
+		
+	</div><!--end container-->
+	<script>
+		///// ren javascript  ////////
+		//Skapar vairlger som behövs i programmet
+		let todolist = document.getElementById('todolist');
+		let txtTodo = document.querySelector('#txtTodo');//på id använd #
+		let btnAdd = document.querySelector('#btnAdd');
+		let divjsArray=document.querySelector('#jsarray');
+		//array för att hålla alla todos
+		let todos = new Array();
+		//skapar en lyssnare eg klickhändelse för add knappen
+		btnAdd.addEventListener("click", function () {
+			//hämtar  data från textfält lägger på det på array
+			todos.push(txtTodo.value);
+			//anropar egen funktion som bygger upp li taggen
+			addtoULList();
+			//visar arrayens innehåll
+			divjsArray.innerText='['+todos.toString()+']';
+		});
+		
+		function addtoULList() {
+		
+			//skapar ett li element
+			let li = document.createElement("li");
+			//hämtar ut data från den sist tillagda todo:n ur arrayen
+			//och skapar en textnod av den
+			
+			let litext = document.createTextNode(todos[todos.length - 1]);
+			//lägger på textnoden på li taggen.
+			li.appendChild(litext);
+			//skapar span tag som ska hålla trashcan symbolen
+			let spantrash =document.createElement("span");
+			//skapar class attributet för span taggen 
+			//dvs <span class="glyphicon glyphicon-trash">
+			let spantrashattr=document.createAttribute("class");
+			spantrashattr.value="glyphicon glyphicon-trash";
+			spantrash.setAttributeNode(spantrashattr);
+			//lägger på trashcan på li taggen
+			li.appendChild(spantrash);
+			//skapar lyssnare för li taggen för att kunna ta bort klickad todo 
+			//ur arrayen samt tar bort den klickade li taggen ur ul listan
+			li.addEventListener('click', function (event) {				
+				//Vilket index ligger den klickade li taggen på.
+				//kolar först vart texten för den li taggen ligger i arrayen av todos
+				//sen använder jag den texten för att få indexposition
+				//let index = todos.indexOf(this.childNodes[0].nodeValue);
+				
+				let index = todos.indexOf(this.innerText);				
+				//ta bort todo från arrayen basert på index
+				todos.splice(index, 1);	
+				//tar även bort li taggen från själv ul listan. Måste vara index+1
+				//todolist.removeChild(todolist.childNodes[index+1]);
+				todolist.removeChild(this);
+				//visar arrayen så att vi ser att todo även försvunnit där
+				divjsArray.innerHTML='<i>['+todos.toString()+']</i>';
+
+			});
+			//lägger till li taggen på ul
+			todolist.appendChild(li);
+
+		}//end addtoULList
+		
+		
+		/////////vue/////////////////
+		var viewmodel = new Vue({
+			el: '#myvueinstance',
+			data: {
+				todovue: new Array(),
+				newTodo: '',
+			},
+			methods: {
+				addTodoVue: function () {
+					this.todovue.push(this.newTodo);
+
+				},
+				removeTodoVue: function (todo) {
+					let index = this.todovue.indexOf(todo);
+					this.todovue.splice(index, 1);
+				}
+
+			}
+		});//end new Vue
+		
+		
+		//////// jquery ////////////////
+		//skapar variabler som behövs
+		let todolistjq = $('#todolistJQuery');//hämtar in på id
+		let txtTodojq =$('#txtTodoJQuery');
+		let btnAddjq = $('#btnAddJQuery');
+		let todosjq = new Array();
+		let divjqArray=document.querySelector('#jqarray');
+		//skapar klickhändelse för add knappen
+		btnAddjq.on('click',function(){
+			//hämtar värden från textfält och lägger det till
+			//arrayen
+			todosjq.push(txtTodojq.val());
+			//anropar egengjord funktion som skapar upp li tagg
+			addToUL();
+			//visar att data kommit in i arrayen också
+			divjqArray.innerText='['+todosjq.toString()+']';
+		
+		});
+		//skapar egen funktion som skapr upp li tag och trashcan
+		function addToUL(){
+			//skapar li tagg
+			let li=$('<li></li>');
+			//sätter text för li taggen baserat på den sist 
+			//tillagd todo:n i arrayen
+			li.text(todosjq[todosjq.length-1]);
+			//skapar span eg trashcan
+			let spantrash=$('<span></span>');
+			//lägger på class så att vi får en trashcan
+			spantrash.addClass('glyphicon glyphicon-trash');			
+			//lägger på trashcan på li taggen
+			li.append(spantrash);
+			//lägger på li taggen på ul
+			todolistjq.append(li);
+		}		
+		
+		//ta bort li tagg samt ta bort ur arryen
+		//delegerar ner klickhändelsen från ul till li taggen
+		$(todolistjq).on( 'click', 'li',function(){
+			//vilket index har den li tagg jag klickade på
+			let idx=$(this).index();			
+			//tar bort från array basert på den klickade li taggens index		
+			todosjq.splice(idx, 1);
+			//tar bort den klickade li taggen			
+			$(this).remove();
+			//visar att todo:n tagits bort ur arrayen också
+			divjqArray.innerText='['+todosjq.toString()+']';
+		} );
+		///
+		
+	</script>
+</body>
+
+</html>
